@@ -1,6 +1,28 @@
 // Include the axios npm package (Don't forget to run "npm install axios" in this folder first!)
 var axios = require("axios");
 
+// Include the dotenv npm package
+var dotenv = require('dotenv').config()
+
+// Include the moment npm package
+var moment = require('moment')
+
+// Include the Spotify npm pacakge
+var Spotify = require('node-spotify-api');
+ 
+// var spotify = new Spotify({
+//   id: "0ffde47bd90243ed8f39ec3275a346a4",
+//   secret: "ed333c1353c24998a4c9f106fa53c824"
+// });
+ 
+// spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, data) {
+//   if (err) {
+//     return console.log('Error occurred: ' + err);
+//   }
+ 
+// console.log(data); 
+// });
+
 // var queryURL;
 var output;
 var operand = process.argv[2]
@@ -26,7 +48,7 @@ switch(operand) {
         queryUrl = "http://www.omdbapi.com/?t=" + output + "&y=&plot=short&apikey=trilogy";
         break
     case 'song':
-        // Create an empty variable for holding the movie name
+                 // Create an empty variable for holding the movie name
         output = "";
         // Loop through all the words in the node argument
         // And do a little for-loop magic to handle the inclusion of "+"s
@@ -39,8 +61,19 @@ switch(operand) {
             output += nodeArgs[i];
         }
     }
-        // Then run a request with axios to the OMDB API with the movie specified
-        queryUrl = "http://www.omdbapi.com/?t=" + output + "&y=&plot=short&apikey=trilogy";
+            var spotify = new Spotify({
+                id: "0ffde47bd90243ed8f39ec3275a346a4",
+                secret: "ed333c1353c24998a4c9f106fa53c824"
+            });
+            
+            spotify.search({ type: 'track', query: output }, function(err, data) {
+                if (err) {
+                return console.log('Error occurred: ' + err);
+                }
+            
+            console.log(data.tracks.href); 
+            queryUrl = data.tracks.href
+            });
         break
     default:
         output = 'Whoops'
