@@ -1,36 +1,52 @@
-// INSTRUCTIONS:
-// ---------------------------------------------------------------------------------------------------------
-// Level 1:
-// Take any movie with a word title (ex: Cinderella) as a Node argument and retrieve the year it was created
-
-// Level 2 (More Challenging):
-// Take a move with multiple words (ex: Forrest Gump) as a Node argument and retrieve the year it was created.
-// ---------------------------------------------------------------------------------------------------------
-
 // Include the axios npm package (Don't forget to run "npm install axios" in this folder first!)
 var axios = require("axios");
 
+// var queryURL;
+var output;
+var operand = process.argv[2]
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
 
-// Create an empty variable for holding the movie name
-var movieName = "";
+switch(operand) {
+    case 'movie':
+        // Create an empty variable for holding the movie name
+        output = "";
+        // Loop through all the words in the node argument
+        // And do a little for-loop magic to handle the inclusion of "+"s
+        for (var i = 3; i < nodeArgs.length; i++) {
 
-// Loop through all the words in the node argument
-// And do a little for-loop magic to handle the inclusion of "+"s
-for (var i = 2; i < nodeArgs.length; i++) {
+        if (i > 3 && i < nodeArgs.length) {
+            output = output + "+" + nodeArgs[i];
+        }
+        else {
+            output += nodeArgs[i];
+        }
+    }
+        // Then run a request with axios to the OMDB API with the movie specified
+        queryUrl = "http://www.omdbapi.com/?t=" + output + "&y=&plot=short&apikey=trilogy";
+        break
+    case 'song':
+        // Create an empty variable for holding the movie name
+        output = "";
+        // Loop through all the words in the node argument
+        // And do a little for-loop magic to handle the inclusion of "+"s
+        for (var i = 3; i < nodeArgs.length; i++) {
 
-  if (i > 2 && i < nodeArgs.length) {
-    movieName = movieName + "+" + nodeArgs[i];
-  }
-  else {
-    movieName += nodeArgs[i];
-
-  }
+        if (i > 3 && i < nodeArgs.length) {
+            output = output + "+" + nodeArgs[i];
+        }
+        else {
+            output += nodeArgs[i];
+        }
+    }
+        // Then run a request with axios to the OMDB API with the movie specified
+        queryUrl = "http://www.omdbapi.com/?t=" + output + "&y=&plot=short&apikey=trilogy";
+        break
+    default:
+        output = 'Whoops'
 }
 
-// Then run a request with axios to the OMDB API with the movie specified
-var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+
 
 // This line is just to help us debug against the actual URL.
 console.log(queryUrl);
@@ -56,5 +72,4 @@ axios.get(queryUrl).then(
       console.log("Error", error.message);
     }
     console.log(error.config);
-  }
-);
+  });
