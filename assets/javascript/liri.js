@@ -18,6 +18,8 @@ var spotify = new Spotify(keys.spotify);
 // var queryURL;
 var output;
 var movies;
+var artist;
+var song;
 var operand = process.argv[2]
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
@@ -34,6 +36,7 @@ switch(operand) {
             movies = movies + "+" + nodeArgs[i];
         }
         else {
+            movies="";
             movies += nodeArgs[i];
         }
     }
@@ -51,8 +54,8 @@ switch(operand) {
             // * IMDB Rating of the movie.
             console.log("IMBD Rating: " + response.data.imdbRating);
             // * Rotten Tomatoes Rating of the movie.
-            // var ratings = JSON.stringify(response.data.Ratings.Value)
-            // console.log("Rotton Tomatoes Rating: " + ratings);
+            var ratings = JSON.stringify(response.data.Ratings[1].Value)
+            console.log("Rotton Tomatoes Rating: " + ratings);
             // * Country where the movie was produced.
             console.log("Country: " + response.data.Country);
             // * Language of the movie.
@@ -83,26 +86,38 @@ switch(operand) {
         break
     case 'spotify-this-song':
                  // Create an empty variable for holding the song name
-        output = "";
+        song = "";
         // Loop through all the words in the node argument
         // And do a little for-loop magic to handle the inclusion of "+"s
         for (var i = 3; i < nodeArgs.length; i++) {
 
         if (i > 3 && i < nodeArgs.length) {
-            output = output + "+" + nodeArgs[i];
+            song = song + "+" + nodeArgs[i];
         }
         else {
-            output += nodeArgs[i];
+            song += nodeArgs[i];
         }
     }
-        spotify.search({ type: 'track', query: output }, function(err, data) {
+    console.log(song)
+    
+        spotify.search({ type: 'track', query: "All The Small Things" }, function(err, data) {
             if (err) {
                 return console.log('Error occurred: ' + err);
             }
-            
-            queryUrl = data.tracks.href
-            
-            console.log("URL: " + queryUrl); 
+            // console.log(data.tracks.items[0])
+            // * Artist(s)
+            var artistName = JSON.stringify(data.tracks.items[0].artists[0].name)
+            console.log("Artist Name: " + artistName)
+            // * The song's name
+            var songName = JSON.stringify(data.tracks.items[0].name)
+            console.log("Song Name: " + songName)
+            // * A preview link of the song from Spotify
+            var spotifyLink = JSON.stringify(data.tracks.items[0].external_urls.spotify)
+            console.log("Spotify Link: " + spotifyLink)
+            // * The album that the song is from
+            var albumName = JSON.stringify(data.tracks.items[0].album.name)
+            console.log("Artist: " + albumName)
+
             });
         break
     case 'concert-this':
@@ -156,9 +171,27 @@ switch(operand) {
         break
     case "do-what-it-says":
         console.log("Do What It Says")
+        fs.readFile("../random.txt", "utf8", function(error, data) {
+
+            // If the code experiences any errors it will log the error to the console.
+            if (error) {
+              return console.log(error);
+            }
+          
+            // We will then print the contents of data
+            console.log(data);
+          
+            // Then split it by commas (to make it more readable)
+            var dataArr = data.split(",");
+          
+            // We will then re-display the content as an array for later use.
+            console.log(dataArr);
+          
+          });
         break
     default:
         output = 'Whoops'
+        console.log(output)
 }
 
 
