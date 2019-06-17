@@ -27,6 +27,42 @@ var operand = process.argv[2]
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
 
+function spotifySong () {
+    // Loop through all the words in the node argument
+    // And do a little for-loop magic to handle the inclusion of "+"s
+    for (var i = 3; i < nodeArgs.length; i++) {
+
+    if (i > 3 && i < nodeArgs.length) {
+        song = song + " " + nodeArgs[i];
+    }
+    else {
+        song = "";
+        song += nodeArgs[i];
+    }
+}
+console.log(song)
+
+    spotify.search({ type: 'track', query: song}, function(err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+        console.log(data.tracks)
+        // * Artist(s)
+        var artistName = JSON.stringify(data.tracks.items[0].artists[0].name)
+        console.log("Artist Name: " + artistName)
+        // * The song's name
+        var songName = JSON.stringify(data.tracks.items[0].name)
+        console.log("Song Name: " + songName)
+        // * A preview link of the song from Spotify
+        var spotifyLink = JSON.stringify(data.tracks.items[0].external_urls.spotify)
+        console.log("Spotify Link: " + spotifyLink)
+        // * The album that the song is from
+        var albumName = JSON.stringify(data.tracks.items[0].album.name)
+        console.log("Artist: " + albumName)
+
+        });
+    }
+
 switch(operand) {
     case 'movie-this':
         // Create an empty variable for holding the movie name
@@ -88,41 +124,7 @@ switch(operand) {
         });
         break
     case 'spotify-this-song':
-        function spotifySong () {
-        // Loop through all the words in the node argument
-        // And do a little for-loop magic to handle the inclusion of "+"s
-        for (var i = 3; i < nodeArgs.length; i++) {
-
-        if (i > 3 && i < nodeArgs.length) {
-            song = song + " " + nodeArgs[i];
-        }
-        else {
-            song = "";
-            song += nodeArgs[i];
-        }
-    }
-    console.log(song)
-
-        spotify.search({ type: 'track', query: song}, function(err, data) {
-            if (err) {
-                return console.log('Error occurred: ' + err);
-            }
-            console.log(data.tracks)
-            // * Artist(s)
-            var artistName = JSON.stringify(data.tracks.items[0].artists[0].name)
-            console.log("Artist Name: " + artistName)
-            // * The song's name
-            var songName = JSON.stringify(data.tracks.items[0].name)
-            console.log("Song Name: " + songName)
-            // * A preview link of the song from Spotify
-            var spotifyLink = JSON.stringify(data.tracks.items[0].external_urls.spotify)
-            console.log("Spotify Link: " + spotifyLink)
-            // * The album that the song is from
-            var albumName = JSON.stringify(data.tracks.items[0].album.name)
-            console.log("Artist: " + albumName)
-
-            });
-        }
+        spotifySong();
         break
     case 'concert-this':
          // Create an empty variable for holding the artist name
