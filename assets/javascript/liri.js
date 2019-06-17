@@ -10,6 +10,9 @@ var moment = require('moment')
 // Include the keys npm package
 var keys = require("./keys.js");
 
+// fs is a core Node package for reading and writing files
+var fs = require("fs");
+
 // Include the Spotify npm pacakge
 var Spotify = require('node-spotify-api');
  
@@ -19,7 +22,7 @@ var spotify = new Spotify(keys.spotify);
 var output;
 var movies;
 var artist;
-var song;
+var song = "The Sign by Ace of Base";
 var operand = process.argv[2]
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
@@ -85,8 +88,7 @@ switch(operand) {
         });
         break
     case 'spotify-this-song':
-                 // Create an empty variable for holding the song name
-        song = "The Sign by Ace of Base";
+        function spotifySong () {
         // Loop through all the words in the node argument
         // And do a little for-loop magic to handle the inclusion of "+"s
         for (var i = 3; i < nodeArgs.length; i++) {
@@ -120,6 +122,7 @@ switch(operand) {
             console.log("Artist: " + albumName)
 
             });
+        }
         break
     case 'concert-this':
          // Create an empty variable for holding the artist name
@@ -172,7 +175,7 @@ switch(operand) {
         break
     case "do-what-it-says":
         console.log("Do What It Says")
-        fs.readFile("../random.txt", "utf8", function(error, data) {
+        fs.readFile("random.txt", "utf8", function(error, data) {
 
             // If the code experiences any errors it will log the error to the console.
             if (error) {
@@ -187,6 +190,10 @@ switch(operand) {
           
             // We will then re-display the content as an array for later use.
             console.log(dataArr);
+
+            operand = dataArr[0]
+            song = dataArr[1]
+            spotifySong();
           
           });
         break
