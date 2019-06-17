@@ -7,21 +7,23 @@ var dotenv = require('dotenv').config()
 // Include the moment npm package
 var moment = require('moment')
 
+// Include the keys npm package
+var keys = require("./keys.js");
+
 // Include the Spotify npm pacakge
 var Spotify = require('node-spotify-api');
  
-// var spotify = new Spotify({
-//   id: "0ffde47bd90243ed8f39ec3275a346a4",
-//   secret: "ed333c1353c24998a4c9f106fa53c824"
-// });
+var spotify = new Spotify(keys.spotify);
  
-// spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, data) {
-//   if (err) {
-//     return console.log('Error occurred: ' + err);
-//   }
+spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, data) {
+  if (err) {
+    return console.log('Error occurred: ' + err);
+  }
+
+output = JSON.stringify(data.tracks.items[0])
  
-// console.log(data); 
-// });
+console.log("URL: " + output); 
+});
 
 // var queryURL;
 var output;
@@ -30,7 +32,7 @@ var operand = process.argv[2]
 var nodeArgs = process.argv;
 
 switch(operand) {
-    case 'movie':
+    case 'movie-this':
         // Create an empty variable for holding the movie name
         output = "";
         // Loop through all the words in the node argument
@@ -47,7 +49,7 @@ switch(operand) {
         // Then run a request with axios to the OMDB API with the movie specified
         queryUrl = "http://www.omdbapi.com/?t=" + output + "&y=&plot=short&apikey=trilogy";
         break
-    case 'song':
+    case 'spotify-this-song':
                  // Create an empty variable for holding the movie name
         output = "";
         // Loop through all the words in the node argument
@@ -61,19 +63,16 @@ switch(operand) {
             output += nodeArgs[i];
         }
     }
-            var spotify = new Spotify({
-                id: "0ffde47bd90243ed8f39ec3275a346a4",
-                secret: "ed333c1353c24998a4c9f106fa53c824"
-            });
+            // var spotify = new Spotify(keys.spotify);
             
-            spotify.search({ type: 'track', query: output }, function(err, data) {
-                if (err) {
-                return console.log('Error occurred: ' + err);
-                }
+            // spotify.search({ type: 'track', query: "All The Small Things" }, function(err, data) {
+            //     if (err) {
+            //     return console.log('Error occurred: ' + err);
+            //     }
             
-            console.log(data.tracks.href); 
-            queryUrl = data.tracks.href
-            });
+            // console.log(data.tracks.href); 
+            // queryUrl = data.tracks.href 
+            // });
         break
     default:
         output = 'Whoops'
