@@ -17,6 +17,7 @@ var spotify = new Spotify(keys.spotify);
 
 // var queryURL;
 var output;
+var movies;
 var operand = process.argv[2]
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
@@ -24,20 +25,20 @@ var nodeArgs = process.argv;
 switch(operand) {
     case 'movie-this':
         // Create an empty variable for holding the movie name
-        output = "";
+        movies = "Mr+Nobody";
         // Loop through all the words in the node argument
         // And do a little for-loop magic to handle the inclusion of "+"s
         for (var i = 3; i < nodeArgs.length; i++) {
 
         if (i > 3 && i < nodeArgs.length) {
-            output = output + "+" + nodeArgs[i];
+            movies = movies + "+" + nodeArgs[i];
         }
         else {
-            output += nodeArgs[i];
+            movies += nodeArgs[i];
         }
     }
         // Then run a request with axios to the OMDB API with the movie specified
-        queryUrl = "http://www.omdbapi.com/?t=" + output + "&y=&plot=short&apikey=trilogy";
+        queryUrl = "http://www.omdbapi.com/?t=" + movies + "&y=&plot=short&apikey=trilogy";
         // This line is just to help us debug against the actual URL.
         console.log(queryUrl);
 
@@ -50,7 +51,8 @@ switch(operand) {
             // * IMDB Rating of the movie.
             console.log("IMBD Rating: " + response.data.imdbRating);
             // * Rotten Tomatoes Rating of the movie.
-            // console.log("Rotton Tomatoes Rating: " + response.data.Ratings.Value[1]);
+            // var ratings = JSON.stringify(response.data.Ratings.Value)
+            // console.log("Rotton Tomatoes Rating: " + ratings);
             // * Country where the movie was produced.
             console.log("Country: " + response.data.Country);
             // * Language of the movie.
@@ -105,20 +107,20 @@ switch(operand) {
         break
     case 'concert-this':
          // Create an empty variable for holding the artist name
-         output = "";
+         artist = "";
          // Loop through all the words in the node argument
          // And do a little for-loop magic to handle the inclusion of "+"s
          for (var i = 3; i < nodeArgs.length; i++) {
  
          if (i > 3 && i < nodeArgs.length) {
-             output = output + "+" + nodeArgs[i];
+             artist = artist + "+" + nodeArgs[i];
          }
          else {
-             output += nodeArgs[i];
+             artist += nodeArgs[i];
          }
      }
          // Then run a request with axios to the OMDB API with the movie specified
-         queryUrl = "https://rest.bandsintown.com/artists/" + output + "/events?app_id=codingbootcamp";
+         queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
 
          // This line is just to help us debug against the actual URL.
         console.log(queryUrl);
@@ -126,10 +128,12 @@ switch(operand) {
         axios.get(queryUrl).then(
         function(response) {
 
-            var response = JSON.stringify(response.data)
-            console.log(response.id[0]);
-            // console.log("Venue Name: " + response.data.venue.name);
-            // console.log("Venue Location: " + response.data.venue.city + ", " + response.data.venue.region);
+            for (var i = 0; i < response.data.length; i++) {
+            console.log("Venue Name: " + response.data[i].venue.name);
+            console.log("Venue City: " + response.data[i].venue.city + ", " + response.data[i].venue.region);
+            var dateTime = moment(response.data[i].datetime).format("MMM D, YYYY h:mm A")
+            console.log("Concert Date & Time: " + dateTime);
+            }
         },
 
         function(error) {
@@ -149,6 +153,9 @@ switch(operand) {
             }
             console.log(error.config);
         });
+        break
+    case "do-what-it-says":
+        console.log("Do What It Says")
         break
     default:
         output = 'Whoops'
