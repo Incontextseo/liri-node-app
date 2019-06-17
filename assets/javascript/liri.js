@@ -86,25 +86,26 @@ switch(operand) {
         break
     case 'spotify-this-song':
                  // Create an empty variable for holding the song name
-        song = "";
+        song = "The Sign by Ace of Base";
         // Loop through all the words in the node argument
         // And do a little for-loop magic to handle the inclusion of "+"s
         for (var i = 3; i < nodeArgs.length; i++) {
 
         if (i > 3 && i < nodeArgs.length) {
-            song = song + "+" + nodeArgs[i];
+            song = song + " " + nodeArgs[i];
         }
         else {
+            song = "";
             song += nodeArgs[i];
         }
     }
     console.log(song)
-    
-        spotify.search({ type: 'track', query: "All The Small Things" }, function(err, data) {
+
+        spotify.search({ type: 'track', query: song}, function(err, data) {
             if (err) {
                 return console.log('Error occurred: ' + err);
             }
-            // console.log(data.tracks.items[0])
+            console.log(data.tracks)
             // * Artist(s)
             var artistName = JSON.stringify(data.tracks.items[0].artists[0].name)
             console.log("Artist Name: " + artistName)
